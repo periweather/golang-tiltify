@@ -1,6 +1,6 @@
 package tiltify
 
-type Avatar struct {
+type Image struct {
 	Src string
 	Alt string
 	Width int
@@ -20,7 +20,7 @@ type User struct {
 	Username string
 	Slug string
 	URL string
-	Avatar Avatar
+	Avatar Image // image object proper?
 	About string
 	TotalAmountRaised float32
 	Social Social
@@ -31,7 +31,7 @@ type Team struct {
 	Username string
 	Slug string
 	URL string
-	Avatar Avatar
+	Avatar Image
 }
 
 type Livestream struct {
@@ -47,7 +47,7 @@ type Campaign struct {
 	StartsAt int64
 	EndsAt int64
 	Description string
-	Avatar Avatar
+	Avatar Image
 	CauseId int
 	FundraisingEventId int
 	FundraiserGoalAmount float32
@@ -60,6 +60,58 @@ type Campaign struct {
 	User User
 	Team Team
 	Livestream Livestream
+}
+
+type Challenge struct{
+	Id int
+	Name string
+	Amount float32 // currency
+	TotalAmountRaised float32
+	Active bool
+	ActivatesOn int64 // date
+	CampaignId int
+	EndsAt int64
+	CreatedAt int64
+	UpdatedAt int64
+}
+
+type Option struct{
+	Id int
+	PollId int
+	Name string
+	TotalAmountRaised float32 // int?
+	CreatedAt int64 // date
+	UpdatedAt int64
+}
+
+
+type Poll struct {
+	Id int
+	Name string
+	Active bool
+	CampaignId int
+	CreatedAt int64
+	UpdatedAt int64
+	Options []Option
+}
+
+type Rewards struct {
+	Id int
+	Name string
+	Description string
+	Amount int
+	Kind string
+	Quantity int
+	Remaining int
+	FairMarketValue int
+	Currency string
+	ShippingAddressRequired bool
+	ShippingNote string
+	Image Image
+	Active bool
+	StartsAt int64
+	CreatedAt int64
+	UpdatedAt int64
 }
 
 
