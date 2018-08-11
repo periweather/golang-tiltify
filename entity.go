@@ -15,28 +15,40 @@ type Social struct {
 	Youtube string
 }
 
-type User struct {
-	Id int
-	Username string
-	Slug string
-	URL string
-	Avatar Image // image object proper?
-	About string
-	TotalAmountRaised float32
-	Social Social
-}
-
-type Team struct {
-	Id int
-	Username string
-	Slug string
-	URL string
-	Avatar Image
-}
-
 type Livestream struct {
 	Type string
 	Channel string
+}
+
+type Option struct{
+	Id int
+	PollId int
+	Name string
+	TotalAmountRaised float32 // int?
+	CreatedAt int64 // date
+	UpdatedAt int64
+}
+
+type Colors struct {
+	Background string
+	Highlight string
+}
+
+type Settings struct {
+	Colors Colors
+	HeaderIntro string
+	HeaderTitle string
+	FooterCopyright string
+	FindOutMoreLink string
+}
+
+type Address struct {
+	AddressLine1 string
+	AddressLine2 string
+	City string
+	Region string
+	PostalCode int
+	Country string
 }
 
 type Campaign struct {
@@ -62,6 +74,29 @@ type Campaign struct {
 	Livestream Livestream
 }
 
+type Cause struct {
+	Id int
+	Name string
+	LegalName string
+	Slug string
+	Currency string
+	About string
+	Video string
+	Image Image
+	Avatar Image
+	Logo Image
+	Banner Image
+	ContactEmail string
+	PaypalEmail string
+	PaypalCurrencyCode string
+	Social Social
+	Settings Settings
+	Status string
+	StripeConnected bool
+	MailchimpConnected bool
+	Address Address
+}
+
 type Challenge struct{
 	Id int
 	Name string
@@ -75,15 +110,26 @@ type Challenge struct{
 	UpdatedAt int64
 }
 
-type Option struct{
+type FundraisingEvent struct {
 	Id int
-	PollId int
 	Name string
-	TotalAmountRaised float32 // int?
-	CreatedAt int64 // date
-	UpdatedAt int64
+	Slug string
+	URL string
+	Description string
+	Video Image // do we want to rename the Image struct?
+	Image Image
+	Avatar Image
+	Logo Image
+	Banner Image
+	BannerTitle string
+	BannerIntro string
+	Currency string
+	Goal float32
+	AmountRaised float32
+	StartsOn string // ISO formatted date instead of the epoc time for others?
+	EndsOn string
+	CauseId int
 }
-
 
 type Poll struct {
 	Id int
@@ -95,7 +141,7 @@ type Poll struct {
 	Options []Option
 }
 
-type Rewards struct {
+type Reward struct {
 	Id int
 	Name string
 	Description string
@@ -114,5 +160,30 @@ type Rewards struct {
 	UpdatedAt int64
 }
 
+type Schedule struct {
+	Id int
+	Name string
+	Description string
+	StartsAt int64
+}
+
+type Team struct {
+	Id int
+	Username string
+	Slug string
+	URL string
+	Avatar Image
+}
+
+type User struct {
+	Id int
+	Username string
+	Slug string
+	URL string
+	Avatar Image // image object proper?
+	About string
+	TotalAmountRaised float32
+	Social Social
+}
 
 
