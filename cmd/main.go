@@ -1,37 +1,52 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"tiltify"
 )
 
+func checkRedirectFunc(req *http.Request, via []*http.Request) error {
+	req.Header.Add("Authorization", via[0].Header.Get("Authorization"))
+	return nil
+}
+
+// peri id 34660
+// mavi id 34652
+// displaced slug/id play-for-the-displaced/14861
+
 func main() {
 
-	url := "https://tiltify.com/api/v3"
+	//url := "https://tiltify.com/api/v3"
 
-	resp, err := http.Get(url + "/users")
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
+	client := http.DefaultClient
+	tc := tiltify.TiltifyClient{Client: client, AuthorizationToken: "924f576d2ef50a6c252957a008e5bfbc2232f61c3f2354abfe33af19dc1546f3"}
 
-	b, err := ioutil.ReadAll(resp.Body)
-
+	user, err := tc.GetUser(34660)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(string(b))
+	//fmt.Println(user.GetCampaign(14861))
+	fmt.Println(user.GetCampaigns())
 
-	var userResp tiltify.UserResponse
-	err = json.Unmarshal(b, &userResp)
+	c, err := tc.GetCampaign(14861)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println(*userResp.Data)
+	fmt.Println(c)
+
+	for _, donation := range c.GetCampaignDonations() {
+		fmt.Println(donation)
+	}
+
+	//var userResp tiltify.UserResponse
+	//err = json.Unmarshal(b, &userResp)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//fmt.Println(*userResp.Data)
 
 }

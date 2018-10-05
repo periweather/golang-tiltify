@@ -7,53 +7,65 @@ import (
 	"strconv"
 )
 
-var baseURL = "https://tiltify.com/api/v3"
-
-func GetUser() (*User, error) {
-	return GetUserById(-1)
-}
+//
+//func GetUser() (*User, error) {
+//	return GetUserById(-1)
+//}
 
 func GetUsers() []User {
 	return nil
 }
 
-func GetUserById(userId int) (*User, error) {
-	url := baseURL + "/user"
-	if userId >= 0 {
-		url += "/" + strconv.Itoa(userId)
-	}
+func (user *User) GetCampaigns() ([]Campaign, error) {
+	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/campaigns"
+
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		return &User{}, err
+		return []Campaign{}, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return &User{}, err
+		return []Campaign{}, err
 	}
 
-	var ur UserResponse
-	err = json.Unmarshal(b, &ur)
+	var csr CampaignsResponse
+	err = json.Unmarshal(b, &csr)
 	if err != nil {
-		return &User{}, err
+		return []Campaign{}, err
 	}
 
-	return ur.Data, nil
+	return csr.Data, nil
 }
 
-func GetCampaigns(userId int) []Campaign {
+func (user *User) GetCampaign(campaignId int) (*Campaign, error) {
+	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/campaigns/" + strconv.Itoa(campaignId)
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	if err != nil {
+		return &Campaign{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return &Campaign{}, err
+	}
+
+	var ucr CampaignResponse
+	err = json.Unmarshal(b, &ucr)
+	if err != nil {
+		return &Campaign{}, err
+	}
+
+	return ucr.Data, nil
+}
+
+func (user *User) GetTeams(userId int) []Team {
 	return nil
 }
 
-func GetCampaign(userId int, campaignId int) Campaign {
-	return Campaign{}
-}
-
-func GetTeams(userId int) []Team {
-	return nil
-}
-
-func GetOwnedTeams(userId int) []Team {
+func (user *User) GetOwnedTeams(userId int) []Team {
 	return nil
 }

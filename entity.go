@@ -74,6 +74,16 @@ type Campaign struct {
 	Livestream             *Livestream
 }
 
+type CampaignResponse struct {
+	Meta *Meta     `json:"meta"`
+	Data *Campaign `json:"data"`
+}
+
+type CampaignsResponse struct {
+	Meta *Meta      `json:"meta"`
+	Data []Campaign `json:"data"`
+}
+
 type Cause struct {
 	Id                 int
 	Name               string
@@ -181,6 +191,16 @@ type Donation struct {
 	Name         string  `json:"name"`
 	DonorComment string  `json:"donorComment"`
 	CreatedAt    int64   `json:"createdAt"`
+}
+
+type DonationResponse struct {
+	Meta *Meta     `json:"meta"`
+	Data *Donation `json:"data"`
+}
+
+type DonationsResponse struct {
+	Meta *Meta      `json:"meta"`
+	Data []Donation `json:"data"`
 }
 
 type User struct {
