@@ -72,11 +72,22 @@ type Campaign struct {
 	User                   *User
 	Team                   *Team
 	Livestream             *Livestream
+
+	tiltifyClient *TiltifyClient
 }
 
 type CampaignResponse struct {
-	Meta *Meta     `json:"meta"`
-	Data *Campaign `json:"data"`
+	Meta  *Meta     `json:"meta"`
+	Data  *Campaign `json:"data"`
+	Links *Links    `json:"links"`
+}
+
+type Links struct {
+	Prev  string `json:"prev"`
+	Next  string `json:"next"`
+	Self  string `json:"self"`
+	First string `json:"first"`
+	Last  string `json:"last"`
 }
 
 type CampaignsResponse struct {
@@ -186,11 +197,12 @@ type Team struct {
 }
 
 type Donation struct {
-	Id           int     `json:"id"`
-	Amount       float32 `json:"amount"`
-	Name         string  `json:"name"`
-	DonorComment string  `json:"donorComment"`
-	CreatedAt    int64   `json:"createdAt"`
+	Id          int     `json:"id"`
+	Amount      float32 `json:"amount"`
+	Name        string  `json:"name"`
+	Comment     string  `json:"comment"`
+	CompletedAt int64   `json:"completedAt"`
+	RewardId    int     `json:"rewardId"`
 }
 
 type DonationResponse struct {
@@ -199,8 +211,9 @@ type DonationResponse struct {
 }
 
 type DonationsResponse struct {
-	Meta *Meta      `json:"meta"`
-	Data []Donation `json:"data"`
+	Meta  *Meta      `json:"meta"`
+	Data  []Donation `json:"data"`
+	Links *Links     `json:"links"`
 }
 
 type User struct {
@@ -212,6 +225,8 @@ type User struct {
 	About             string  `json:"about"`
 	TotalAmountRaised float32 `json:"totalAmountRaised"`
 	Social            *Social `json:"social"`
+
+	tiltifyClient *TiltifyClient
 }
 
 type UserResponse struct {

@@ -2,6 +2,7 @@ package tiltify
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -44,6 +45,25 @@ func (tc *TiltifyClient) GetUser(userId int) (*User, error) {
 	}
 
 	return ur.Data, nil
+}
+
+func (tc *TiltifyClient) MakeRequest(method string, url string) (req *http.Request, err error) {
+	req, err = http.NewRequest(method, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(tc.AuthorizationToken)
+	req.Header.Add("Authorization", "Bearer "+tc.AuthorizationToken)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+func (tc *TiltifyClient) DoRequest(req *http.Request) (resp *http.Response, err error) {
+	return tc.Client.Do(req)
 }
 
 // curl https://tiltify.com/api/v3/campaigns/42

@@ -2,6 +2,7 @@ package tiltify
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -36,6 +37,10 @@ func (user *User) GetCampaigns() ([]Campaign, error) {
 		return []Campaign{}, err
 	}
 
+	//TODO fix this crap
+	for c := range csr.Data {
+		fmt.Println(c)
+	}
 	return csr.Data, nil
 }
 

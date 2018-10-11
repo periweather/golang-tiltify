@@ -43,7 +43,7 @@ func (campaign *Campaign) GetCampaignDonations() []Donation {
 		return []Donation{}
 	}
 
-	fmt.Println(string(b))
+	fmt.Println(dsr.Links)
 
 	return dsr.Data
 }
