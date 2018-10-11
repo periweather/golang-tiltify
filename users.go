@@ -67,10 +67,52 @@ func (user *User) GetCampaign(campaignId int) (*Campaign, error) {
 	return ucr.Data, nil
 }
 
-func (user *User) GetTeams(userId int) []Team {
-	return nil
+// GET /users/1/teams
+
+func (user *User) GetTeams() (teams []Team, err error) {
+	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/teams"
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	if err != nil {
+		return []Team{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Team{}, err
+	}
+
+	var tsr TeamsResponse
+	err = json.Unmarshal(b, &tsr)
+	if err != nil {
+		return []Team{}, err
+	}
+
+	return tsr.Data, nil
 }
 
-func (user *User) GetOwnedTeams(userId int) []Team {
-	return nil
+// GET /users/:id/owned-teams
+
+func (user *User) GetOwnedTeams() (teams []Team, err error) {
+	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/owned-teams"
+
+	resp, err := http.Get(url)
+	defer resp.Body.Close()
+	if err != nil {
+		return []Team{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Team{}, err
+	}
+
+	var tsr TeamsResponse
+	err = json.Unmarshal(b, &tsr)
+	if err != nil {
+		return []Team{}, err
+	}
+
+	return tsr.Data, nil
 }

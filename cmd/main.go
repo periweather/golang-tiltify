@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"tiltify"
-	"time"
 )
 
 func checkRedirectFunc(req *http.Request, via []*http.Request) error {
@@ -28,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	//fmt.Println(user.GetCampaign(14861))
+	fmt.Println(user.GetCampaign(14861))
 	fmt.Println(user.GetCampaigns())
 
 	c, err := tc.GetCampaign(14861)
@@ -38,9 +37,12 @@ func main() {
 
 	fmt.Println(c)
 
-	for _, donation := range c.GetCampaignDonations() {
-		fmt.Println(time.Unix(donation.CompletedAt, 0))
-		fmt.Println(donation.Comment)
+	scheds, err := c.GetCampaignSchedule()
+
+	fmt.Println(scheds)
+
+	for _, s := range scheds {
+		fmt.Println(s.Description)
 	}
 
 	//var userResp tiltify.UserResponse

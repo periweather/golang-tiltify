@@ -60,8 +60,39 @@ func GetCampaignChallenges(campaignId int) []Challenge {
 	return nil
 }
 
-func GetCampaignSchedule(campaignId int) Schedule {
-	return Schedule{}
+func (campaign *Campaign) GetCampaignSchedule() (scheds []Schedule, err error) {
+	// GET /campaigns/:id/donations
+
+	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/schedule"
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return []Schedule{}, err
+	}
+	req.Header.Add("Authorization", "Bearer 924f576d2ef50a6c252957a008e5bfbc2232f61c3f2354abfe33af19dc1546f3")
+
+	client := http.DefaultClient
+
+	resp, err := client.Do(req)
+
+	//resp, err := http.Get(url)
+	defer resp.Body.Close()
+	if err != nil {
+		return []Schedule{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Schedule{}, err
+	}
+
+	var sr SchedulesResponse
+	err = json.Unmarshal(b, &sr)
+	if err != nil {
+		return []Schedule{}, err
+	}
+
+	return sr.Data, nil
 }
 
 func GetCampaignsSupportingCampaigns(campaignId int) []Campaign {

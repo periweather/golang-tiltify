@@ -188,12 +188,22 @@ type Schedule struct {
 	StartsAt    int64
 }
 
+type SchedulesResponse struct {
+	Meta *Meta      `json:"meta""`
+	Data []Schedule `json:"data"`
+}
+
 type Team struct {
 	Id       int
 	Username string
 	Slug     string
 	URL      string
 	Avatar   *Image
+}
+
+type TeamsResponse struct {
+	Meta *Meta  `json:"meta""`
+	Data []Team `json:"data"`
 }
 
 type Donation struct {
