@@ -8,15 +8,6 @@ import (
 	"strconv"
 )
 
-//
-//func GetUser() (*User, error) {
-//	return GetUserById(-1)
-//}
-
-func GetUsers() []User {
-	return nil
-}
-
 func (user *User) GetCampaigns() ([]Campaign, error) {
 	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/campaigns"
 

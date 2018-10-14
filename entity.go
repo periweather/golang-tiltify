@@ -79,7 +79,6 @@ type Campaign struct {
 type CampaignResponse struct {
 	Meta  *Meta     `json:"meta"`
 	Data  *Campaign `json:"data"`
-	Links *Links    `json:"links"`
 }
 
 type Links struct {
@@ -93,6 +92,7 @@ type Links struct {
 type CampaignsResponse struct {
 	Meta *Meta      `json:"meta"`
 	Data []Campaign `json:"data"`
+	Links *Links `json:"links"`
 }
 
 type Cause struct {
@@ -131,6 +131,12 @@ type Challenge struct {
 	UpdatedAt         int64
 }
 
+type ChallengesResponse struct {
+	Meta *Meta `json:"meta"`
+	Data []Challenge `json:"data"`
+	Links *Links `json:"links"'`
+}
+
 type FundraisingEvent struct {
 	Id           int
 	Name         string
@@ -162,6 +168,12 @@ type Poll struct {
 	Options    []Option
 }
 
+type PollsResponse struct {
+	Meta *Meta `json:"meta"`
+	Data []Poll `json:"data"`
+	Links *Links `json:"links"`
+}
+
 type Reward struct {
 	Id                      int
 	Name                    string
@@ -174,11 +186,17 @@ type Reward struct {
 	Currency                string
 	ShippingAddressRequired bool
 	ShippingNote            string
-	Image                   Image
+	Image                   *Image
 	Active                  bool
 	StartsAt                int64
 	CreatedAt               int64
 	UpdatedAt               int64
+}
+
+type RewardsResponse struct {
+	Meta *Meta `json:"meta"`
+	Data []Reward `json:"data"`
+	Links *Links `json:"links"`
 }
 
 type Schedule struct {
@@ -191,6 +209,7 @@ type Schedule struct {
 type SchedulesResponse struct {
 	Meta *Meta      `json:"meta""`
 	Data []Schedule `json:"data"`
+	Links *Links `json:"data"`
 }
 
 type Team struct {

@@ -6,58 +6,132 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"reflect"
 )
 
 // TODO according to the API, these don't just return the json object, but other stuff (meta) wrapped around it
 
 // TODO error checking
-func (campaign *Campaign) GetCampaignDonations() []Donation {
+func (campaign *Campaign) GetCampaignDonations() (donations []Donation, err error) {
 	// GET /campaigns/:id/donations
 
 	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/donations"
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
 	if err != nil {
-		return []Donation{}
+		return []Donation{}, err
 	}
-	req.Header.Add("Authorization", "Bearer 924f576d2ef50a6c252957a008e5bfbc2232f61c3f2354abfe33af19dc1546f3")
 
-	client := http.DefaultClient
-
-	resp, err := client.Do(req)
+	resp, err := campaign.tiltifyClient.DoRequest(req)
 
 	//resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		return []Donation{}
+		return []Donation{}, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return []Donation{}
+		return []Donation{}, err
 	}
 
 	var dsr DonationsResponse
 	err = json.Unmarshal(b, &dsr)
 	if err != nil {
-		return []Donation{}
+		return []Donation{}, err
 	}
 
 	fmt.Println(dsr.Links)
 
-	return dsr.Data
+	return dsr.Data, nil
 }
 
-func GetCampaignRewards(campaignId int) []Reward {
-	return nil
+func (campaign *Campaign) GetCampaignRewards(campaignId int) (rewards []Reward, err error) {
+	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/rewards"
+
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
+	if err != nil {
+		return []Reward{}, err
+	}
+
+	resp, err := campaign.tiltifyClient.DoRequest(req)
+
+	defer resp.Body.Close()
+	if err != nil {
+		return []Reward{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Reward{}, err
+	}
+
+	var rsr RewardsResponse
+	err = json.Unmarshal(b, &rsr)
+	if err != nil {
+		return []Reward{}, err
+	}
+
+	return rsr.Data, nil
 }
 
-func GetCampaignPolls(campaignId int) []Poll {
-	return nil
+func (campaign *Campaign) GetCampaignPolls() (polls []Poll, err error) {
+	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/polls"
+
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
+	if err != nil {
+		return []Poll{}, err
+	}
+
+	resp, err := campaign.tiltifyClient.DoRequest(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return []Poll{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Poll{}, err
+	}
+
+	var psr PollsResponse
+	err = json.Unmarshal(b, &psr)
+	if err != nil {
+		return []Poll{}, err
+	}
+
+	return psr.Data, nil
+
 }
 
-func GetCampaignChallenges(campaignId int) []Challenge {
-	return nil
+func (campaign *Campaign) GetCampaignChallenges() (challenges []Challenge, err error) {
+	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/challenges"
+
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
+	if err != nil {
+		return []Challenge{}, err
+	}
+
+	resp, err := campaign.tiltifyClient.DoRequest(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return []Challenge{}, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return []Challenge{}, err
+	}
+
+	var csr ChallengesResponse
+	err = json.Unmarshal(b, &csr)
+	if err != nil {
+		return []Challenge{}, err
+	}
+
+	return csr.Data, nil
 }
 
 func (campaign *Campaign) GetCampaignSchedule() (scheds []Schedule, err error) {
@@ -65,18 +139,14 @@ func (campaign *Campaign) GetCampaignSchedule() (scheds []Schedule, err error) {
 
 	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/schedule"
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
 	if err != nil {
 		return []Schedule{}, err
 	}
-	req.Header.Add("Authorization", "Bearer 924f576d2ef50a6c252957a008e5bfbc2232f61c3f2354abfe33af19dc1546f3")
 
-	client := http.DefaultClient
-
-	resp, err := client.Do(req)
-
-	//resp, err := http.Get(url)
+	resp, err := campaign.tiltifyClient.DoRequest(req)
 	defer resp.Body.Close()
+
 	if err != nil {
 		return []Schedule{}, err
 	}
@@ -95,6 +165,33 @@ func (campaign *Campaign) GetCampaignSchedule() (scheds []Schedule, err error) {
 	return sr.Data, nil
 }
 
-func GetCampaignsSupportingCampaigns(campaignId int) []Campaign {
-	return nil
+// TODO check the proper url when i get back online
+func (campaign *Campaign) GetCampaignsSupportingCampaigns() (campaigns []Campaign, err error) {
+	url := baseURL + "/campaigns/" + strconv.Itoa(campaign.Id) + "/supportingcampaigns"
+
+	req, err := campaign.tiltifyClient.MakeRequest(http.MethodGet, url)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO should i defer resp.Body after the err check in all the places?
+	resp, err := campaign.tiltifyClient.DoRequest(req)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var csr CampaignsResponse
+	err = json.Unmarshal(b, &csr)
+	if err != nil {
+		return nil, err
+	}
+
+	return csr.Data, nil
 }

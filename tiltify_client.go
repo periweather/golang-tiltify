@@ -16,10 +16,7 @@ type TiltifyClient struct {
 }
 
 func (tc *TiltifyClient) GetUser(userId int) (*User, error) {
-	url := baseURL + "/users"
-	if userId >= 0 {
-		url += "/" + strconv.Itoa(userId)
-	}
+	url := baseURL + "/users/" + strconv.Itoa(userId)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
