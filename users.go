@@ -8,24 +8,24 @@ import (
 	"strconv"
 )
 
-func (user *User) GetCampaigns() ([]Campaign, error) {
-	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/campaigns"
+func (user *User) GetCampaigns() ([]CampaignData, error) {
+	url := baseURL + "/users/" + strconv.Itoa(user.Data.Id) + "/campaigns"
 
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		return []Campaign{}, err
+		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return []Campaign{}, err
+		return nil, err
 	}
 
-	var csr CampaignsResponse
+	var csr Campaigns
 	err = json.Unmarshal(b, &csr)
 	if err != nil {
-		return []Campaign{}, err
+		return nil, err
 	}
 
 	//TODO fix this crap
@@ -36,74 +36,58 @@ func (user *User) GetCampaigns() ([]Campaign, error) {
 }
 
 func (user *User) GetCampaign(campaignId int) (*Campaign, error) {
-	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/campaigns/" + strconv.Itoa(campaignId)
+	url := baseURL + "/users/" + strconv.Itoa(user.Data.Id) + "/campaigns/" + strconv.Itoa(campaignId)
 
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 	if err != nil {
-		return &Campaign{}, err
+		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return &Campaign{}, err
+		return nil, err
 	}
 
-	var ucr CampaignResponse
+	var ucr Campaign
 	err = json.Unmarshal(b, &ucr)
 	if err != nil {
-		return &Campaign{}, err
+		return nil, err
 	}
 
-	return ucr.Data, nil
+	return &ucr, nil
 }
 
 // GET /users/1/teams
 
-func (user *User) GetTeams() (teams []Team, err error) {
-	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/teams"
-
-	resp, err := http.Get(url)
-	defer resp.Body.Close()
+func (user *User) GetTeams() (*Teams, error) {
+	b, err := user.tc.makeRequest("/users/" + strconv.Itoa(user.Data.Id) + "/teams")
 	if err != nil {
-		return []Team{}, err
+		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	var teams Teams
+	err = json.Unmarshal(b, &teams)
 	if err != nil {
-		return []Team{}, err
+		return nil, err
 	}
 
-	var tsr TeamsResponse
-	err = json.Unmarshal(b, &tsr)
-	if err != nil {
-		return []Team{}, err
-	}
-
-	return tsr.Data, nil
+	return &teams, nil
 }
 
 // GET /users/:id/owned-teams
 
-func (user *User) GetOwnedTeams() (teams []Team, err error) {
-	url := baseURL + "/users/" + strconv.Itoa(user.Id) + "/owned-teams"
-
-	resp, err := http.Get(url)
-	defer resp.Body.Close()
+func (user *User) GetOwnedTeams() (*Teams, error) {
+	b, err := user.tc.makeRequest("/users/" + strconv.Itoa(user.Data.Id) + "/owned-teams")
 	if err != nil {
-		return []Team{}, err
+		return nil, err
 	}
 
-	b, err := ioutil.ReadAll(resp.Body)
+	var teams Teams
+	err = json.Unmarshal(b, &teams)
 	if err != nil {
-		return []Team{}, err
+		return nil, err
 	}
 
-	var tsr TeamsResponse
-	err = json.Unmarshal(b, &tsr)
-	if err != nil {
-		return []Team{}, err
-	}
-
-	return tsr.Data, nil
+	return &teams, nil
 }

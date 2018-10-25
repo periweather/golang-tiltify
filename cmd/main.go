@@ -26,31 +26,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(user.Data)
+	fmt.Println(user.GetOwnedTeams())
 
-	fmt.Println(user.GetCampaign(14861))
-	fmt.Println(user.GetCampaigns())
-
-	c, err := tc.GetCampaign(14861)
+	campaign, err := tc.GetCampaign(14861)
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(c)
-
-	scheds, err := c.GetCampaignSchedule()
-
-	fmt.Println(scheds)
-
-	for _, s := range scheds {
-		fmt.Println(s.Description)
-	}
-
-	//var userResp tiltify.UserResponse
-	//err = json.Unmarshal(b, &userResp)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//fmt.Println(*userResp.Data)
+	//fmt.Println(campaign.Data.User.GetTeams())
 
 }

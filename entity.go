@@ -51,34 +51,34 @@ type Address struct {
 	Country      string
 }
 
-type Campaign struct {
-	Id                     int
-	Name                   string
-	Slug                   string
-	URL                    string
-	StartsAt               int64
-	EndsAt                 int64
-	Description            string
-	Avatar                 Image
-	CauseId                int
-	FundraisingEventId     int
-	FundraiserGoalAmount   float32
-	OriginalGoalAmount     float32
-	AmountRaised           float32
-	SupportingAmountRaised float32
-	TotalAmountRaised      float32
-	Supportable            bool
-	Status                 string
-	User                   *User
-	Team                   *Team
-	Livestream             *Livestream
-
-	tiltifyClient *TiltifyClient
+type CampaignData struct {
+	Id                     int         `json:"id"`
+	Name                   string      `json:"name"`
+	Slug                   string      `json:"slug"`
+	URL                    string      `json:"url"`
+	StartsAt               int64       `json:"startsAt"`
+	EndsAt                 int64       `json:"endsAt"`
+	Description            string      `json:"description"`
+	Avatar                 *Image      `json:"avatar"`
+	CauseId                int         `json:"causeId"`
+	FundraisingEventId     int         `json:"fundraisingEventId"`
+	FundraiserGoalAmount   float32     `json:"fundraiserGoalAmount"`
+	OriginalGoalAmount     float32     `json:"originalGoalAmount"`
+	AmountRaised           float32     `json:"amountRaised"`
+	SupportingAmountRaised float32     `json:"supportingAmountRaised"`
+	TotalAmountRaised      float32     `json:"totalAmountRaised"`
+	Supportable            bool        `json:"supportable"`
+	Status                 string      `json:"status"`
+	User                   *UserData   `json:"user"`
+	Team                   *Team       `json:"team"`
+	Livestream             *Livestream `json:"livestream"`
 }
 
-type CampaignResponse struct {
-	Meta  *Meta     `json:"meta"`
-	Data  *Campaign `json:"data"`
+type Campaign struct {
+	Meta *Meta         `json:"meta"`
+	Data *CampaignData `json:"data"`
+
+	tc *TiltifyClient
 }
 
 type Links struct {
@@ -89,10 +89,10 @@ type Links struct {
 	Last  string `json:"last"`
 }
 
-type CampaignsResponse struct {
-	Meta *Meta      `json:"meta"`
-	Data []Campaign `json:"data"`
-	Links *Links `json:"links"`
+type Campaigns struct {
+	Meta  *Meta          `json:"meta"`
+	Data  []CampaignData `json:"data"`
+	Links *Links         `json:"links"`
 }
 
 type Cause struct {
@@ -132,9 +132,9 @@ type Challenge struct {
 }
 
 type ChallengesResponse struct {
-	Meta *Meta `json:"meta"`
-	Data []Challenge `json:"data"`
-	Links *Links `json:"links"'`
+	Meta  *Meta       `json:"meta"`
+	Data  []Challenge `json:"data"`
+	Links *Links      `json:"links"'`
 }
 
 type FundraisingEvent struct {
@@ -158,7 +158,7 @@ type FundraisingEvent struct {
 	CauseId      int
 }
 
-type Poll struct {
+type PollData struct {
 	Id         int
 	Name       string
 	Active     bool
@@ -168,13 +168,13 @@ type Poll struct {
 	Options    []Option
 }
 
-type PollsResponse struct {
-	Meta *Meta `json:"meta"`
-	Data []Poll `json:"data"`
-	Links *Links `json:"links"`
+type Polls struct {
+	Meta  *Meta      `json:"meta"`
+	Data  []PollData `json:"data"`
+	Links *Links     `json:"links"`
 }
 
-type Reward struct {
+type RewardData struct {
 	Id                      int
 	Name                    string
 	Description             string
@@ -193,23 +193,23 @@ type Reward struct {
 	UpdatedAt               int64
 }
 
-type RewardsResponse struct {
-	Meta *Meta `json:"meta"`
-	Data []Reward `json:"data"`
-	Links *Links `json:"links"`
+type Rewards struct {
+	Meta  *Meta        `json:"meta"`
+	Data  []RewardData `json:"data"`
+	Links *Links       `json:"links"`
 }
 
-type Schedule struct {
+type ScheduleData struct {
 	Id          int
 	Name        string
 	Description string
 	StartsAt    int64
 }
 
-type SchedulesResponse struct {
-	Meta *Meta      `json:"meta""`
-	Data []Schedule `json:"data"`
-	Links *Links `json:"data"`
+type Schedules struct {
+	Meta  *Meta          `json:"meta""`
+	Data  []ScheduleData `json:"data"`
+	Links *Links         `json:"data"`
 }
 
 type Team struct {
@@ -220,12 +220,12 @@ type Team struct {
 	Avatar   *Image
 }
 
-type TeamsResponse struct {
+type Teams struct {
 	Meta *Meta  `json:"meta""`
 	Data []Team `json:"data"`
 }
 
-type Donation struct {
+type DonationData struct {
 	Id          int     `json:"id"`
 	Amount      float32 `json:"amount"`
 	Name        string  `json:"name"`
@@ -234,18 +234,18 @@ type Donation struct {
 	RewardId    int     `json:"rewardId"`
 }
 
-type DonationResponse struct {
-	Meta *Meta     `json:"meta"`
-	Data *Donation `json:"data"`
+type Donation struct {
+	Meta *Meta         `json:"meta"`
+	Data *DonationData `json:"data"`
 }
 
-type DonationsResponse struct {
-	Meta  *Meta      `json:"meta"`
-	Data  []Donation `json:"data"`
-	Links *Links     `json:"links"`
+type Donations struct {
+	Meta  *Meta          `json:"meta"`
+	Data  []DonationData `json:"data"`
+	Links *Links         `json:"links"`
 }
 
-type User struct {
+type UserData struct {
 	Id                int     `json:"id"`
 	Username          string  `json:"username"`
 	Slug              string  `json:"slug"`
@@ -254,13 +254,20 @@ type User struct {
 	About             string  `json:"about"`
 	TotalAmountRaised float32 `json:"totalAmountRaised"`
 	Social            *Social `json:"social"`
-
-	tiltifyClient *TiltifyClient
 }
 
-type UserResponse struct {
-	Meta *Meta `json:"meta"`
-	Data *User `json:"data"`
+type User struct {
+	Meta   *Meta     `json:"meta"`
+	Data   *UserData `json:"data"`
+	Status string    `json:"status"`
+
+	tc *TiltifyClient
+}
+
+type Users struct {
+	Meta   *Meta      `json:"meta"`
+	Data   []UserData `json:"data"`
+	Status string     `json:"status"`
 }
 
 type Meta struct {
